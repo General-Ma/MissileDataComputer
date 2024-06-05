@@ -20,5 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('agents/', include('agents.urls')),
     path('missiles/', include('missiles.urls')),
-    path('missile_lanchers/', include('missile_lanchers.urls')),
+    path('missile_launchers/', include('missile_launchers.urls')),
 ]
