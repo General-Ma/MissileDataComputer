@@ -40,10 +40,24 @@ class Missle(models.Model):
     #       +   (False, False)   +    Inactive, authorisation required   +
     #       ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #   launch_code: the launch_code of this missle, leave the field empty if it does not need one
+    #   missile_model: the missile collection, i.e. MissileRef, which this missle belongs to
+    #   missile_launcher: the missle launcher that carries this missile, leave it blank if it is not equipped anywhere
     #---------------------------------------------------------------------------------------------
     id = models.UUIDField(primary_key=True, default=uuid4)
     active = models.BooleanField(default=True)
     launched = models.BooleanField(default=False)
     launch_code = models.CharField(blank=True, validators=[RegexValidator(r'^\d{6}?$')])
+    missile_model = models.OneToOneField(MissleRef, on_delete=models.PROTECT)
     missle_launcher = models.ForeignKey(MissleLauncher, on_delete=SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        if active and launched:
+            status = "Out"
+        elif active and (not launched):
+            status = "Standing By"
+        elif (not active) and launched:
+            status = "Neutralized"
+        else: # not active and not launched
+            status = "Not activated"
+        return f'Missle: {MissleRef.model_type} - {id} - {status}'
 

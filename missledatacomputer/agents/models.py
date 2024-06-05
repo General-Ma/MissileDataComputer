@@ -28,6 +28,9 @@ class Agent(models.Model):
     hostility = models.CharField(max_length=10, choices=HOSTILITY_OPTIONS, default='N')
     stationary = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f'Agent:{model_type} - {name} - {hostility}'
+
 class LocationRecord(models.Model):
     #--------------------------------------------------------------------------------------------
     #   LocationRecord is a recorded geolocation of a specific agent
