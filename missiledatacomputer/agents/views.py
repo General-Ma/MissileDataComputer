@@ -3,14 +3,15 @@ from django.views.decorators.http import require_http_methods, require_GET, requ
 from django.http import HttpResponse, JsonResponse
 from .models import Agent, LocationRecord
 import json
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
+from django.middleware.csrf import get_token as get_csrf_token
 
 # index as the entry url
 def index(request):
+    csrf_token = get_csrf_token(request)
     return HttpResponse("Agents application is online. Route is accessible")
 
 # create a new agent and save to db
-@csrf_exempt
 @require_POST
 def create_agent(request):
     try:
@@ -61,7 +62,6 @@ def get_agent(request, id):
         return JsonResponse({'error': 'An Unknown Error'}, status=500)
 
 # get all agents' ids
-@csrf_exempt
 @require_GET
 def get_all_agents(request):
     try:
@@ -73,7 +73,6 @@ def get_all_agents(request):
         return JsonResponse({'error': 'An Unknown Error'}, status=500)
 
 # delete an agent
-@csrf_exempt
 @require_http_methods(['DELETE'])
 def del_agent(request, id):
     try:
@@ -89,7 +88,6 @@ def del_agent(request, id):
         return JsonResponse({'error': 'An Unknown Error'}, status=500)
 
 # update an agent
-@csrf_exempt
 @require_http_methods(['PATCH', 'PUT'])
 def patch_agent(request, id):
     try:

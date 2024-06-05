@@ -1,6 +1,7 @@
 from django.db import models
 from uuid import uuid4
 from django.core.validators import MinValueValidator, MaxValueValidator
+import geopy
 
 # Create your models here.
 
