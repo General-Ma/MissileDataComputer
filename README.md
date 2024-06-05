@@ -1,2 +1,2 @@
 ## Missile Data Computer
-Inspired by the legendary TDC (Torpedo Dat Computer)
+Inspired by the legendary TDC (Torpedo Data Computer)
