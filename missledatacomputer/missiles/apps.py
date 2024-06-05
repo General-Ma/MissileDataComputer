@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MisslesConfig(AppConfig):
+class MissilesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'missles'
+    name = 'missiles'
