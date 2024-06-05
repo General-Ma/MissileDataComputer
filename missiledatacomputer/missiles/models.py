@@ -1,7 +1,7 @@
 from django.db import models
 from uuid import uuid4
 from django.core.validators import RegexValidator
-from missile_launchers import MissileLauncher
+from missile_launchers.models import MissileLauncher
 
 # Create your models here.
 class MissileRef(models.Model):
@@ -46,9 +46,9 @@ class Missile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     active = models.BooleanField(default=True)
     launched = models.BooleanField(default=False)
-    launch_code = models.CharField(blank=True, validators=[RegexValidator(r'^\d{6}?$')])
+    launch_code = models.CharField(blank=True, max_length=8, validators=[RegexValidator(r'^\d{6}?$')])
     missile_model = models.OneToOneField(MissileRef, on_delete=models.PROTECT)
-    missile_launcher = models.ForeignKey(MissileLauncher, on_delete=SET_NULL, blank=True, null=True)
+    missile_launcher = models.ForeignKey(MissileLauncher, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         if active and launched:
