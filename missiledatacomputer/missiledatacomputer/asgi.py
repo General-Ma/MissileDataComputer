@@ -1,5 +1,5 @@
 """
-ASGI config for missledatacomputer project.
+ASGI config for missliedatacomputer project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
