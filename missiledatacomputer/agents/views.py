@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods, require_GET, requ
 from django.http import HttpResponse, JsonResponse
 from .models import Agent, LocationRecord
 import json
+from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
 from django.middleware.csrf import get_token as get_csrf_token
 
@@ -31,6 +32,7 @@ def create_agent(request):
         except ValueError:
             return JsonResponse({'error': 'Invalid Field'}, status=400)
 
+        cache.delete("agents") # to force updating
         return JsonResponse({'message': 'New Agent Created.', 'id':new_agent.id }, status=201)
 
     except Exception as e :
@@ -65,8 +67,13 @@ def get_agent(request, id):
 @require_GET
 def get_all_agents(request):
     try:
-        agents = Agent.objects.values_list('id', flat=True)
-        return JsonResponse({"agents":list(agents)}, status=200)
+        cached = cache.get("agents")
+        if cached is not None:
+            return JsonResponse({"agents":cached}, status=200)
+        agents_query = Agent.objects.values_list('id', flat=True)
+        agents= list(agents_query)
+        cache.set("agents", agents, timeout=3600)
+        return JsonResponse({"agents":agents}, status=200)
 
     except Exception as e :
         print(f'Unexpected error:{e}')
@@ -82,6 +89,8 @@ def del_agent(request, id):
         except Agent.DoesNotExist:
             # status 200 is responded on purpose, as a security feature. Maybe in future, we should add authorisation and authentication here.
             print(f"Deletion Attempted, but Item Not Found, {id}")
+
+        cache.delete("agents") # to force updating
         return JsonResponse({"message":f"Agent {id} has been removed from database"}, status=200)
     except Exception as e :
         print(f'Unexpected error:{e}')
